@@ -50,7 +50,7 @@ function draw(){
 
     }
 
-    ctx.fillStyle="red";
+    ctx.fillStyle="gold";
     ctx.fillRect(food.x,food.y,box,box);
 
     let snakeX=snake[0].x;
