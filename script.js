@@ -61,21 +61,22 @@ function draw(){
     if(direction=="RIGHT") snakeX+=box;
     if(direction=="DOWN") snakeY+=box;
 
-    if(
-        snakeX<0 ||
-        snakeY<0 ||
-        snakeX>=400 ||
-        snakeY>=400
-    ){
+    // Wrap Around
+if (snakeX < 0) {
+    snakeX = 380;
+}
 
-        clearInterval(game);
+if (snakeX >= 400) {
+    snakeX = 0;
+}
 
-        alert("Game Over!\nScore: "+score);
+if (snakeY < 0) {
+    snakeY = 380;
+}
 
-        return;
-
-    }
-
+if (snakeY >= 400) {
+    snakeY = 0;
+}
     for(let i=1;i<snake.length;i++){
 
         if(snakeX==snake[i].x && snakeY==snake[i].y){
