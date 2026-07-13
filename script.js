@@ -47,12 +47,37 @@ function draw() {
 
     for (let i = 0; i < snake.length; i++) {
 
-        // Snake Body
+        // Snake body
         ctx.beginPath();
         ctx.fillStyle = i == 0 ? "#32CD32" : "#228B22";
         ctx.arc(snake[i].x + box / 2, snake[i].y + box / 2, box / 2 - 2, 0, Math.PI * 2);
         ctx.fill();
 
+        // Head (first part)
+        if (i == 0) {
+
+            // Left Eye
+            ctx.beginPath();
+            ctx.fillStyle = "white";
+            ctx.arc(snake[i].x + 6, snake[i].y + 7, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Right Eye
+            ctx.beginPath();
+            ctx.arc(snake[i].x + 14, snake[i].y + 7, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Eye pupils
+            ctx.fillStyle = "black";
+
+            ctx.beginPath();
+            ctx.arc(snake[i].x + 6, snake[i].y + 7, 1, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(snake[i].x + 14, snake[i].y + 7, 1, 0, Math.PI * 2);
+            ctx.fill();
+        }
     }
 
     ctx.font = "20px Arial";
