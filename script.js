@@ -47,8 +47,11 @@ function draw() {
 
     for (let i = 0; i < snake.length; i++) {
 
-        ctx.fillStyle = i == 0 ? "lime" : "green";
-        ctx.fillRect(snake[i].x, snake[i].y, box, box);
+        // Snake Body
+        ctx.beginPath();
+        ctx.fillStyle = i == 0 ? "#32CD32" : "#228B22";
+        ctx.arc(snake[i].x + box / 2, snake[i].y + box / 2, box / 2 - 2, 0, Math.PI * 2);
+        ctx.fill();
 
     }
 
