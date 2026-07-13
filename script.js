@@ -1,6 +1,9 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 const box = 20;
+const fruits = ["🍎","🍌","🍇","🍊","🍓"];
+
+let fruit = fruits[Math.floor(Math.random() * fruits.length)];
 
 let snake = [
     {x: 200, y: 200}
