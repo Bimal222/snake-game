@@ -108,6 +108,7 @@ function draw() {
             x: Math.floor(Math.random() * 20) * box,
             y: Math.floor(Math.random() * 20) * box
         };
+        fruit = fruits[Math.floor(Math.random() * fruits.length)];
 
     } else {
 
