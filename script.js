@@ -49,7 +49,7 @@ function draw() {
 
         // Snake body
         ctx.beginPath();
-        ctx.fillStyle = i == 0 ? "#32CD32" : "#228B22";
+        ctx.fillStyle = i == 0 ? "#ee7728" : "#228B22";
         ctx.arc(snake[i].x + box / 2, snake[i].y + box / 2, box / 2 - 2, 0, Math.PI * 2);
         ctx.fill();
 
