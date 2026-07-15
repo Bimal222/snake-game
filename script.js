@@ -148,7 +148,9 @@ function draw() {
 
 }
 
-let game = setInterval(draw, 150);
+let game;
+
+let paused = false;
 
 function restartGame() {
 
