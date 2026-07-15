@@ -157,3 +157,33 @@ function restartGame() {
     location.reload();
 
 }
+function startGame() {
+
+    game = setInterval(draw, 150);
+
+    document.getElementById("startBtn").style.display = "none";
+
+    document.getElementById("pauseBtn").style.display = "inline";
+
+}
+function pauseGame() {
+
+    if (!paused) {
+
+        clearInterval(game);
+
+        paused = true;
+
+        document.getElementById("pauseBtn").innerHTML = "▶ Resume";
+
+    } else {
+
+        game = setInterval(draw, 150);
+
+        paused = false;
+
+        document.getElementById("pauseBtn").innerHTML = "⏸ Pause";
+
+    }
+
+}
