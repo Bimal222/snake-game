@@ -1,189 +1,192 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
-const box = 20;
-const fruits = ["🍎", "🍌", "🍇", "🍊", "🍓"];
 
+const box = 20;
+const gridSize = 20;
+
+const fruits = ["🍎", "🍌", "🍇", "🍊", "🍓"];
 let fruit = fruits[Math.floor(Math.random() * fruits.length)];
 
-let snake = [
-    { x: 200, y: 200 }
-];
+let snake = [{ x: 200, y: 200 }];
 
-let food = {
-    x: Math.floor(Math.random() * 20) * box,
-    y: Math.floor(Math.random() * 20) * box
-};
-
+let food = generateFood();
 let score = 0;
 
 let direction = "";
+let speed = 150;
+let game;
+let paused = false;
 
+// ----------------------------
+// INPUT HANDLING
+// ----------------------------
 document.addEventListener("keydown", changeDirection);
 
 function changeDirection(event) {
+    const key = event.key;
 
-    if (event.key == "ArrowLeft" && direction != "RIGHT") {
-        direction = "LEFT";
-    }
-
-    if (event.key == "ArrowUp" && direction != "DOWN") {
-        direction = "UP";
-    }
-
-    if (event.key == "ArrowRight" && direction != "LEFT") {
-        direction = "RIGHT";
-    }
-
-    if (event.key == "ArrowDown" && direction != "UP") {
-        direction = "DOWN";
-    }
-
+    if (key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
+    if (key === "ArrowUp" && direction !== "DOWN") direction = "UP";
+    if (key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
+    if (key === "ArrowDown" && direction !== "UP") direction = "DOWN";
 }
 
-function draw() {
+// ----------------------------
+// FOOD GENERATOR (NO OVERLAP)
+// ----------------------------
+function generateFood() {
+    let newFood;
 
+    while (true) {
+        newFood = {
+            x: Math.floor(Math.random() * gridSize) * box,
+            y: Math.floor(Math.random() * gridSize) * box
+        };
+
+        // Ensure food does NOT spawn inside snake body
+        let overlap = snake.some(part => part.x === newFood.x && part.y === newFood.y);
+        if (!overlap) break;
+    }
+
+    return newFood;
+}
+
+// ----------------------------
+// DRAW SNAKE EYES (DIRECTIONAL)
+// ----------------------------
+function drawEyes(headX, headY) {
+    ctx.fillStyle = "white";
+
+    if (direction === "LEFT") {
+        ctx.beginPath();
+        ctx.arc(headX - 4, headY - 4, 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(headX - 4, headY + 4, 2, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    if (direction === "RIGHT") {
+        ctx.beginPath();
+        ctx.arc(headX + 4, headY - 4, 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(headX + 4, headY + 4, 2, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    if (direction === "UP") {
+        ctx.beginPath();
+        ctx.arc(headX - 4, headY - 4, 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(headX + 4, headY - 4, 2, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    if (direction === "DOWN") {
+        ctx.beginPath();
+        ctx.arc(headX - 4, headY + 4, 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(headX + 4, headY + 4, 2, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+// ----------------------------
+// MAIN DRAW FUNCTION
+// ----------------------------
+function draw() {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, 400, 400);
 
+    // Draw snake
     for (let i = 0; i < snake.length; i++) {
-
-        // Snake body
         ctx.beginPath();
-        ctx.fillStyle = i == 0 ? "#ee7728" : "#d45c2c";
+        ctx.fillStyle = i === 0 ? "#ee7728" : "#d45c2c";
         ctx.arc(snake[i].x + box / 2, snake[i].y + box / 2, box / 2 - 2, 0, Math.PI * 2);
         ctx.fill();
 
-        // Head (first part)
-        if (i == 0) {
-
-            // Left Eye
-            ctx.beginPath();
-            ctx.fillStyle = "white";
-            ctx.arc(snake[i].x + 6, snake[i].y + 7, 2, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Right Eye
-            ctx.beginPath();
-            ctx.arc(snake[i].x + 14, snake[i].y + 7, 2, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Eye pupils
-            ctx.fillStyle = "black";
-
-            ctx.beginPath();
-            ctx.arc(snake[i].x + 6, snake[i].y + 7, 1, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.beginPath();
-            ctx.arc(snake[i].x + 14, snake[i].y + 7, 1, 0, Math.PI * 2);
-            ctx.fill();
+        if (i === 0) {
+            drawEyes(snake[i].x + box / 2, snake[i].y + box / 2);
         }
     }
 
+    // Draw fruit
     ctx.font = "20px Arial";
     ctx.fillText(fruit, food.x, food.y + 18);
 
+    // Movement
     let snakeX = snake[0].x;
     let snakeY = snake[0].y;
 
-    if (direction == "LEFT") snakeX -= box;
-    if (direction == "UP") snakeY -= box;
-    if (direction == "RIGHT") snakeX += box;
-    if (direction == "DOWN") snakeY += box;
+    if (direction === "LEFT") snakeX -= box;
+    if (direction === "UP") snakeY -= box;
+    if (direction === "RIGHT") snakeX += box;
+    if (direction === "DOWN") snakeY += box;
 
-    // Wrap Around
-    if (snakeX < 0) {
-        snakeX = 380;
-    }
+    // Wrap-around
+    if (snakeX < 0) snakeX = 380;
+    if (snakeX >= 400) snakeX = 0;
+    if (snakeY < 0) snakeY = 380;
+    if (snakeY >= 400) snakeY = 0;
 
-    if (snakeX >= 400) {
-        snakeX = 0;
-    }
-
-    if (snakeY < 0) {
-        snakeY = 380;
-    }
-
-    if (snakeY >= 400) {
-        snakeY = 0;
-    }
+    // Self-collision
     for (let i = 1; i < snake.length; i++) {
-
-        if (snakeX == snake[i].x && snakeY == snake[i].y) {
-
+        if (snakeX === snake[i].x && snakeY === snake[i].y) {
             clearInterval(game);
-
             alert("Game Over!\nScore: " + score);
-
             return;
-
         }
-
     }
 
-    let newHead = {
-        x: snakeX,
-        y: snakeY
-    };
+    // New head
+    let newHead = { x: snakeX, y: snakeY };
 
-    if (snakeX == food.x && snakeY == food.y) {
-
+    // Fruit eaten
+    if (snakeX === food.x && snakeY === food.y) {
         score++;
-
         document.getElementById("score").innerHTML = score;
 
-        food = {
-            x: Math.floor(Math.random() * 20) * box,
-            y: Math.floor(Math.random() * 20) * box
-        };
+        food = generateFood();
         fruit = fruits[Math.floor(Math.random() * fruits.length)];
 
+        // Increase speed (minimum 60ms)
+        speed = Math.max(60, speed - 5);
+        clearInterval(game);
+        game = setInterval(draw, speed);
+
     } else {
-
         snake.pop();
-
     }
 
     snake.unshift(newHead);
-
 }
 
-let game;
-
-let paused = false;
-
-function restartGame() {
-
-    location.reload();
-
-}
+// ----------------------------
+// GAME CONTROLS
+// ----------------------------
 function startGame() {
-
-    game = setInterval(draw, 150);
+    if (!direction) direction = "RIGHT"; // Auto start direction
+    game = setInterval(draw, speed);
 
     document.getElementById("startBtn").style.display = "none";
-
     document.getElementById("pauseBtn").style.display = "inline";
-
 }
+
 function pauseGame() {
-
     if (!paused) {
-
         clearInterval(game);
-
         paused = true;
-
         document.getElementById("pauseBtn").innerHTML = "▶ Resume";
-
     } else {
-
-        game = setInterval(draw, 150);
-
+        game = setInterval(draw, speed);
         paused = false;
-
         document.getElementById("pauseBtn").innerHTML = "⏸ Pause";
-
     }
+}
 
+function restartGame() {
+    location.reload();
 }
