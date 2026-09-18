@@ -26,22 +26,15 @@ body {
     margin-bottom: 20px;
 }
 
-.assignment {
+#introScreen p {
+    font-size: 18px;
+    margin: 8px;
+}
+
+#introScreen p:first-of-type {
     font-size: 21px;
     font-weight: bold;
 }
-
-.created {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-#introScreen p {
-    font-size: 18px;
-}
-
-
-/* START BUTTON */
 
 #introStartBtn {
     margin-top: 25px;
@@ -83,7 +76,7 @@ body {
 }
 
 
-/* MENU */
+/* BUTTONS */
 
 .menu {
     margin: 5px;
@@ -91,13 +84,10 @@ body {
 
 .menu button {
     padding: 10px 20px;
-
     font-size: 17px;
-
     margin: 5px;
 
     background: #32CD32;
-
     color: white;
 
     border: none;
@@ -111,20 +101,18 @@ body {
 }
 
 
-/* CANVAS */
+/* GAME */
 
 canvas {
     background: rgb(219, 207, 207);
-
     border: 4px solid rgb(69, 196, 96);
-
     margin-top: 5px;
 }
 
 
 /* RESTART */
 
-#gameArea>button {
+#gameArea > button {
     margin-top: 10px;
 
     padding: 10px 20px;
@@ -132,13 +120,12 @@ canvas {
     font-size: 17px;
 
     border: none;
-
     border-radius: 10px;
 
     cursor: pointer;
 }
 
-#gameArea>button:hover {
+#gameArea > button:hover {
     background: rgb(74, 151, 74);
     color: white;
 }

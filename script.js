@@ -168,11 +168,27 @@ function draw() {
 // GAME CONTROLS
 // ----------------------------
 function startGame() {
-    if (!direction) direction = "RIGHT"; // Auto start direction
-    game = setInterval(draw, speed);
 
+    if (game) return;
+
+    if (!direction) {
+        direction = "RIGHT";
+    }
+
+    // Intro hide
+    document.getElementById("introScreen").style.display = "none";
+
+    // Game show
+    document.getElementById("gameArea").style.display = "flex";
+
+    // Hide start button
     document.getElementById("startBtn").style.display = "none";
+
+    // Show pause button
     document.getElementById("pauseBtn").style.display = "inline";
+
+    // Start game
+    game = setInterval(draw, speed);
 }
 
 function pauseGame() {
