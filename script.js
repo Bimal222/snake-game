@@ -16,6 +16,8 @@ let direction = "";
 let speed = 150;
 let game;
 let paused = false;
+let playerName = "";
+let startTime = 0;
 
 // ----------------------------
 // INPUT HANDLING
@@ -171,14 +173,26 @@ function startGame() {
 
     if (game) return;
 
+    // Get player name
+    playerName = document.getElementById("playerName").value.trim();
+
+    // Name is required
+    if (playerName === "") {
+        alert("Please enter your name!");
+        return;
+    }
+
+    // Start time
+    startTime = Date.now();
+
     if (!direction) {
         direction = "RIGHT";
     }
 
-    // Intro hide
+    // Hide intro
     document.getElementById("introScreen").style.display = "none";
 
-    // Game show
+    // Show game
     document.getElementById("gameArea").style.display = "flex";
 
     // Hide start button
