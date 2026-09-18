@@ -136,9 +136,26 @@ function draw() {
 
     // Self-collision
     for (let i = 1; i < snake.length; i++) {
+
         if (snakeX === snake[i].x && snakeY === snake[i].y) {
+
             clearInterval(game);
-            alert("Game Over!\nScore: " + score);
+
+            let playTime = Math.floor(
+                (Date.now() - startTime) / 1000
+            );
+
+            let minutes = Math.floor(playTime / 60);
+
+            let seconds = playTime % 60;
+
+            alert(
+                "🎉 GAME OVER! 🎉\n\n" +
+                "Player: " + playerName + "\n" +
+                "Score: " + score + "\n" +
+                "Time: " + minutes + " min " + seconds + " sec"
+            );
+
             return;
         }
     }
