@@ -124,7 +124,7 @@ canvas {
 
 /* RESTART */
 
-#gameArea > button {
+#gameArea>button {
     margin-top: 10px;
 
     padding: 10px 20px;
@@ -138,7 +138,7 @@ canvas {
     cursor: pointer;
 }
 
-#gameArea > button:hover {
+#gameArea>button:hover {
     background: rgb(74, 151, 74);
     color: white;
 }
