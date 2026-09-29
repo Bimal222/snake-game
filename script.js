@@ -18,6 +18,7 @@ let game;
 let paused = false;
 let playerName = "";
 let startTime = 0;
+let obstacles = [];
 
 // ----------------------------
 // INPUT HANDLING
@@ -51,6 +52,17 @@ function generateFood() {
     }
 
     return newFood;
+}
+function generateObstacles() {
+
+    obstacles = [];
+
+    let wall = {
+        x: 300,
+        y: 200
+    };
+
+    obstacles.push(wall);
 }
 
 // ----------------------------
@@ -119,6 +131,19 @@ function draw() {
     ctx.font = "20px Arial";
     ctx.fillText(fruit, food.x, food.y + 18);
 
+    // Draw wall
+    for (let wall of obstacles) {
+
+        ctx.fillStyle = "#555";
+
+        ctx.fillRect(
+            wall.x,
+            wall.y,
+            box,
+            box
+        );
+    }
+
     // Movement
     let snakeX = snake[0].x;
     let snakeY = snake[0].y;
@@ -133,6 +158,25 @@ function draw() {
     if (snakeX >= 400) snakeX = 0;
     if (snakeY < 0) snakeY = 380;
     if (snakeY >= 400) snakeY = 0;
+
+    // Wall collision
+    for (let wall of obstacles) {
+
+        if (
+            snakeX === wall.x &&
+            snakeY === wall.y
+        ) {
+
+            clearInterval(game);
+
+            alert(
+                "Game Over!\n" +
+                "Score: " + score
+            );
+
+            return;
+        }
+    }
 
     // Self-collision
     for (let i = 1; i < snake.length; i++) {
@@ -201,6 +245,8 @@ function startGame() {
 
     // Start time
     startTime = Date.now();
+
+    generateObstacles();
 
     if (!direction) {
         direction = "RIGHT";
